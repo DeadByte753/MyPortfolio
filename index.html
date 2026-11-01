@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>John Emmanuel Suante</title>
+  <meta name="claude:viewport-fit-sides" content="cover">
+  <meta name="description" content="Portfolio of John Emmanuel T. Suante — BSIT student and aspiring cybersecurity professional from Malinao, Aklan.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Press+Start+2P&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="progress" aria-hidden="true"></div>
+  <div id="cursor" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="wrap nav-in">
+      <a href="#home" class="logo" aria-label="John Emmanuel Suante, home">
+        <span class="logo-mark">JE<img src="assets/images/profile.webp" alt=""></span>
+        <span id="logoText">suante<small>.dev</small></span>
+      </a>
+      <nav class="links" id="links" aria-label="Sections">
+        <span class="pill" id="navPill"></span>
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#achievements">Achievements</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <button class="icon-btn theme-btn" id="themeBtn" aria-label="Switch light or dark mode" title="Switch theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+      </button>
+    </div>
+  </header>
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Sections">
+    <a href="#about"><span>01</span>About</a>
+    <a href="#skills"><span>02</span>Skills</a>
+    <a href="#projects"><span>03</span>Projects</a>
+    <a href="#achievements"><span>04</span>Achievements</a>
+    <a href="#contact"><span>05</span>Contact</a>
+  </nav>
+
+  <main>
+  <section class="hero" id="home">
+    <canvas id="field" aria-hidden="true"></canvas>
+    <div class="wrap hero-grid">
+      <div>
+        <span class="status"><i></i>BSIT · Aklan State University – Kalibo</span>
+        <h1 id="name" aria-label="John Emmanuel T. Suante">
+          <span class="l1" data-scramble>JOHN EMMANUEL</span>
+          <span class="l2"><span data-scramble>T. SUANTE</span><span class="fill" aria-hidden="true">T. SUANTE</span></span>
+        </h1>
+        <p class="role" aria-live="polite"><span class="mono">&gt;&nbsp;</span><b id="typed">IT Student</b><span class="caret"></span></p>
+        <p class="intro">Second-year <strong>IT student</strong> and <strong>aspiring cybersecurity professional</strong> from Malinao, Aklan. I build web and mobile apps with React, TypeScript and Flutter, and I compete in hackathons and CTFs across Western Visayas.</p>
+        <div class="cta">
+          <button class="btn primary mag" id="resumeBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4.5-4.5M12 15l4.5-4.5M4 19h16"/></svg>
+            Download Resume
+          </button>
+          <a class="btn ghost mag" href="#projects">See my work
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>
+          </a>
+        </div>
+        <div class="stats">
+          <div class="stat"><b data-count="5">5</b><span>Competitions entered</span></div>
+          <div class="stat"><b><span data-count="5">5</span><sup>th</sup></b><span>HackForGov 5 regional</span></div>
+          <div class="stat"><b data-count="5">5</b><span>Certificates earned</span></div>
+          <div class="stat"><b data-count="9">9</b><span>Languages &amp; frameworks</span></div>
+        </div>
+      </div>
+      <div class="coin-stage" id="coinStage">
+        <div class="coin-glow" aria-hidden="true"></div>
+        <div class="ring" aria-hidden="true"></div>
+        <div class="ring ring2" aria-hidden="true"></div>
+        <div class="coin-shadow" aria-hidden="true"></div>
+        <button class="coin-tilt" id="coinBtn" aria-label="Flip between the ASU Dev Guild and ASU Cyber Guild logos">
+          <span class="coin" id="coin">
+            <span class="rim" style="--z:-4px"></span><span class="rim" style="--z:-2.5px"></span><span class="rim" style="--z:-1px"></span><span class="rim" style="--z:0.5px"></span><span class="rim" style="--z:2px"></span><span class="rim" style="--z:3.5px"></span>
+            <span class="face front"><img src="assets/images/asu-dev-guild.webp" alt="ASU Dev Guild logo"></span>
+            <span class="face back"><img src="assets/images/asu-cyber-guild.webp" alt="ASU Cyber Guild logo"></span>
+          </span>
+        </button>
+        <div class="coin-cap" id="coinCap"><b id="coinName">ASU Dev Guild</b><span id="coinSub">Learn · Build · Serve</span></div>
+        <span class="chip-float a"><i></i>React</span>
+        <span class="chip-float b"><i></i>Flutter</span>
+        <span class="chip-float c"><i></i>Cybersecurity</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee" aria-label="Tech stack">
+    <div class="track">
+      <span>React</span><span>TypeScript</span><span>JavaScript</span><span>HTML</span><span>CSS</span><span>Java</span><span>Flutter</span><span>Dart</span><span>Python</span><span>Flask</span><span>Tailwind CSS</span><span>CTF</span>
+      <span aria-hidden="true">React</span><span aria-hidden="true">TypeScript</span><span aria-hidden="true">JavaScript</span><span aria-hidden="true">HTML</span><span aria-hidden="true">CSS</span><span aria-hidden="true">Java</span><span aria-hidden="true">Flutter</span><span aria-hidden="true">Dart</span><span aria-hidden="true">Python</span><span aria-hidden="true">Flask</span><span aria-hidden="true">Tailwind CSS</span><span aria-hidden="true">CTF</span>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section class="block" id="about">
+    <div class="wrap">
+      <div class="head">
+        <div><span class="eyebrow">About me</span><h2 class="split">From Malinao, <em>building outward.</em></h2></div>
+        <p data-reveal>A student developer who likes knowing how systems work, and how they break.</p>
+      </div>
+      <div class="about-grid">
+        <div class="about-text">
+          <p class="lead" data-reveal>I'm a 2nd-year <mark>BS Information Technology</mark> student majoring in Instructional System Technology, studying at Aklan State University – Kalibo.</p>
+          <p data-reveal>I got into tech by building things: interfaces in React, mobile apps in Flutter, and a full-stack budgeting app for students like me. Competing pulled me toward security. Capture-the-flag rounds at HackForGov and DICT's ethical hacking mentoring showed me how much is at stake when software is careless with people's data.</p>
+          <p data-reveal>My goal is a career in <strong style="color:var(--fg)">cybersecurity</strong>: building secure systems, and helping local governments and schools in the Visayas protect what they run.</p>
+          <dl class="facts" data-reveal>
+            <div><dt>Course</dt><dd>BS Information Technology</dd></div>
+            <div><dt>Major</dt><dd>Instructional System Technology</dd></div>
+            <div><dt>Year</dt><dd>2nd Year</dd></div>
+            <div><dt>Hometown</dt><dd>Malinao, Aklan</dd></div>
+          </dl>
+          <div class="learning" data-reveal>
+            <h3>Currently learning</h3>
+            <div class="learn-row"><i></i><div>Web development with React &amp; TypeScript</div><span>Building</span></div>
+            <div class="learn-row"><i></i><div>Ethical hacking &amp; CTF problem solving</div><span>HackForGov</span></div>
+            <div class="learn-row"><i></i><div>Cross-platform apps with Flutter &amp; Dart</div><span>Self-study</span></div>
+            <div class="learn-row"><i></i><div>Backend APIs with Python &amp; Flask</div><span>Monetrax</span></div>
+          </div>
+        </div>
+        <div class="map-card" data-reveal>
+          <canvas id="map" role="img" aria-label="Dot-matrix map of Panay Island with Poblacion, Malinao, Aklan marked at the center"></canvas>
+          <div class="map-hud"><span class="hud-tag">Local time <b id="clock">--:--:--</b></span></div>
+          <div class="map-label">
+            <div class="place"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Poblacion, Malinao, Aklan</div>
+            <div class="coords">11.6442° N, 122.3076° E · UTC+8</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="block" id="skills">
+    <div class="wrap">
+      <div class="head">
+        <div><span class="eyebrow">Technical skills</span><h2 class="split">The <em>stack</em> I work in.</h2></div>
+        <p data-reveal>Pick a category to light it up in the orbit. Hover a planet to pause the system, or click it to jump to its group.</p>
+      </div>
+      <div class="sk-grid">
+        <div class="card orbit-card" data-reveal>
+          <div class="orbit" id="orbit" data-focus="all">
+            <div class="o-ring r3" data-off="-90"><button class="node" data-cat="mobile" style="--c:#54C5F8"><span class="n-in">Fu</span><em>Flutter</em></button><button class="node" data-cat="sec" style="--c:#FF4D5E"><span class="n-in">⚑</span><em>CTF</em></button><button class="node" data-cat="tools" style="--c:#F05032"><span class="n-in">Git</span><em>Git &amp; GitHub</em></button><button class="node" data-cat="sec" style="--c:#FF4D5E"><span class="n-in">EH</span><em>Ethical hacking</em></button><button class="node" data-cat="tools" style="--c:#FCC624"><span class="n-in">Lx</span><em>Linux</em></button><button class="node" data-cat="sec" style="--c:#FF4D5E"><span class="n-in">SA</span><em>Secure auth</em></button><button class="node" data-cat="tools" style="--c:#2E9BF0"><span class="n-in">Win</span><em>Windows</em></button><button class="node" data-cat="tools" style="--c:#46E3B7"><span class="n-in">Rn</span><em>Render</em></button></div>
+            <div class="o-ring r2" data-off="-60"><button class="node" data-cat="web" style="--c:#61DAFB"><span class="n-in">Re</span><em>React</em></button><button class="node" data-cat="web" style="--c:#E34F26"><span class="n-in">H5</span><em>HTML</em></button><button class="node" data-cat="web" style="--c:#2965F1"><span class="n-in">C3</span><em>CSS</em></button><button class="node" data-cat="web" style="--c:#38BDF8"><span class="n-in">Tw</span><em>Tailwind CSS</em></button><button class="node" data-cat="web" style="--c:#B4BAD0"><span class="n-in">Fl</span><em>Flask</em></button><button class="node" data-cat="web" style="--c:#FF6384"><span class="n-in">Cj</span><em>Chart.js</em></button></div>
+            <div class="o-ring r1" data-off="-90"><button class="node" data-cat="lang" style="--c:#3178C6"><span class="n-in">TS</span><em>TypeScript</em></button><button class="node" data-cat="lang" style="--c:#F7DF1E"><span class="n-in">JS</span><em>JavaScript</em></button><button class="node" data-cat="lang" style="--c:#F89820"><span class="n-in">Jv</span><em>Java</em></button><button class="node" data-cat="lang mobile" style="--c:#29B6F6"><span class="n-in">Dt</span><em>Dart</em></button><button class="node" data-cat="lang" style="--c:#4B8BBE"><span class="n-in">Py</span><em>Python</em></button></div>
+            <div class="core"><span class="core-wave"></span><span class="core-wave w2"></span><span class="core-in"><b>JE</b></span></div>
+          </div>
+          <div class="sk-filter" role="group" aria-label="Filter skills">
+            <button data-f="all" aria-pressed="true">All</button><button data-f="lang" aria-pressed="false">Languages</button><button data-f="web" aria-pressed="false">Web</button><button data-f="mobile" aria-pressed="false">Mobile</button><button data-f="sec" aria-pressed="false">Security</button><button data-f="tools" aria-pressed="false">Tools</button>
+          </div>
+        </div>
+        <div class="sk-list">
+          <article class="card sk-cat" data-cat="lang" data-reveal style="--d:0ms" tabindex="0" role="button" aria-label="Highlight Programming Languages in the orbit">
+            <span class="bb" aria-hidden="true"></span>
+            <div class="sk-row"><span class="skill-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg></span><div><h3>Programming Languages</h3><p>What I write day to day and in coursework.</p></div><span class="sk-count">5</span></div>
+            <div class="chips"><span class="chip"><i style="--c:#3178C6"></i>TypeScript</span><span class="chip"><i style="--c:#F7DF1E"></i>JavaScript</span><span class="chip"><i style="--c:#F89820"></i>Java <small>DataCamp ×2</small></span><span class="chip"><i style="--c:#29B6F6"></i>Dart</span><span class="chip"><i style="--c:#4B8BBE"></i>Python <small>Monetrax</small></span></div>
+          </article><article class="card sk-cat" data-cat="web" data-reveal style="--d:60ms" tabindex="0" role="button" aria-label="Highlight Web Development in the orbit">
+            <span class="bb" aria-hidden="true"></span>
+            <div class="sk-row"><span class="skill-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/></svg></span><div><h3>Web Development</h3><p>Front-end interfaces and full-stack web apps.</p></div><span class="sk-count">6</span></div>
+            <div class="chips"><span class="chip"><i style="--c:#61DAFB"></i>React</span><span class="chip"><i style="--c:#E34F26"></i>HTML</span><span class="chip"><i style="--c:#2965F1"></i>CSS</span><span class="chip"><i style="--c:#38BDF8"></i>Tailwind CSS</span><span class="chip"><i style="--c:#B4BAD0"></i>Flask <small>Monetrax</small></span><span class="chip"><i style="--c:#FF6384"></i>Chart.js</span></div>
+          </article><article class="card sk-cat" data-cat="mobile" data-reveal style="--d:120ms" tabindex="0" role="button" aria-label="Highlight Mobile in the orbit">
+            <span class="bb" aria-hidden="true"></span>
+            <div class="sk-row"><span class="skill-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg></span><div><h3>Mobile</h3><p>Cross-platform apps from one codebase.</p></div><span class="sk-count">2</span></div>
+            <div class="chips"><span class="chip"><i style="--c:#54C5F8"></i>Flutter</span><span class="chip"><i style="--c:#29B6F6"></i>Dart</span></div>
+          </article><article class="card sk-cat" data-cat="sec" data-reveal style="--d:180ms" tabindex="0" role="button" aria-label="Highlight Cybersecurity in the orbit">
+            <span class="bb" aria-hidden="true"></span>
+            <div class="sk-row"><span class="skill-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6l-8-3z"/><path d="m9 12 2 2 4-4"/></svg></span><div><h3>Cybersecurity</h3><p>My focus area, practiced through CTFs and secure coding.</p></div><span class="sk-count">3</span></div>
+            <div class="chips"><span class="chip"><i style="--c:#FF4D5E"></i>CTF challenges <small>HackForGov Top 5</small></span><span class="chip"><i style="--c:#FF4D5E"></i>Ethical hacking <small>DICT</small></span><span class="chip"><i style="--c:#FF4D5E"></i>Secure auth &amp; CSRF <small>Monetrax</small></span></div>
+          </article><article class="card sk-cat" data-cat="tools" data-reveal style="--d:240ms" tabindex="0" role="button" aria-label="Highlight Operating Systems &amp; Tools in the orbit">
+            <span class="bb" aria-hidden="true"></span>
+            <div class="sk-row"><span class="skill-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="m6 9 3 2-3 2M12 13h4M8 21h8"/></svg></span><div><h3>Operating Systems &amp; Tools</h3><p>Where I build, test and ship.</p></div><span class="sk-count">4</span></div>
+            <div class="chips"><span class="chip"><i style="--c:#2E9BF0"></i>Windows</span><span class="chip"><i style="--c:#FCC624"></i>Linux</span><span class="chip"><i style="--c:#F05032"></i>Git &amp; GitHub</span><span class="chip"><i style="--c:#46E3B7"></i>Render</span></div>
+          </article>
+        </div>
+      </div>
+      <div class="card term" data-reveal>
+        <div class="term-bar"><i></i><i></i><i></i><span>deadbyte@asu-kalibo: ~</span></div>
+        <pre class="term-body" id="term" aria-label="Terminal summary of my skills"></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="block" id="projects">
+    <div class="wrap">
+      <div class="head">
+        <div><span class="eyebrow">Projects</span><h2 class="split">Things I've <em>shipped.</em></h2></div>
+        <p data-reveal>A full-stack app of my own, plus team builds made under hackathon deadlines.</p>
+      </div>
+
+      <article class="card feature" data-reveal>
+        <div class="feature-body">
+          <div class="tagrow"><span class="tag">Full-stack web app</span><span class="tag amber">Solo project</span></div>
+          <h3>Monetrax</h3>
+          <p>A personal finance app for college students: track your allowance across wallets, set budgets, save toward goals, and see where your money goes. Retro pixel-art interface. <em>"Your Money. Your Direction."</em></p>
+          <ul class="flist">
+            <li><div><b>Safe-to-spend</b> <span>daily figure on the dashboard</span></div></li>
+            <li><div><b>Wallets</b> <span>Cash, GCash, Maya, bank and card</span></div></li>
+            <li><div><b>Budgets</b> <span>alerts at 75%, 90% and 100%</span></div></li>
+            <li><div><b>Savings goals</b> <span>with the weekly pace needed</span></div></li>
+            <li><div><b>Recurring entries</b> <span>pause, skip or stop</span></div></li>
+            <li><div><b>Security</b> <span>hashed passwords and CSRF protection</span></div></li>
+          </ul>
+          <div class="tagrow"><span class="chip">Python</span><span class="chip">Flask</span><span class="chip">PostgreSQL</span><span class="chip">Tailwind CSS</span><span class="chip">Chart.js</span></div>
+          <div class="feature-actions">
+            <a class="btn primary mag" href="https://github.com/DeadByte753/Monetrax" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.6 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>
+              View on GitHub
+            </a>
+          </div>
+        </div>
+        <div class="mock-wrap" aria-label="Illustrative preview of the Monetrax dashboard">
+          <div class="mock">
+            <div class="mt"><span>MONETRAX</span><span>♥ LV.2</span></div>
+            <div class="big">₱245.00</div>
+            <div class="sub">SAFE TO SPEND TODAY</div>
+            <div class="bars">
+              <i style="--h:42%;--k:0"></i><i style="--h:68%;--k:1"></i><i style="--h:30%;--k:2"></i><i style="--h:84%;--k:3"></i><i style="--h:55%;--k:4"></i><i style="--h:22%;--k:5"></i><i style="--h:60%;--k:6"></i>
+            </div>
+            <div class="wal"><div>CASH<b>₱820</b></div><div>GCASH<b>₱1,450</b></div></div>
+            <div class="goal">GOAL: NEW LAPTOP · 62%<div class="bar"></div></div>
+          </div>
+          <span class="mock-note">Illustration · sample figures</span>
+        </div>
+      </article>
+
+      <div class="builds">
+        <article class="card build tilt" data-reveal>
+          <div class="ph"><img src="assets/images/komsaihack-team-tabang.jpg" alt="Team Tabang from Aklan State University Kalibo, KomsaiHack 2026 RiskReady team poster" loading="lazy"><span class="rank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 9.2 8.3 2 9.2l5.4 4.8L5.8 21 12 17.3 18.2 21l-1.6-7 5.4-4.8-7.2-.9z"/></svg>Top 6</span></div>
+          <div class="bd">
+            <span class="tag" style="justify-self:start;width:max-content">Team build · Disaster risk</span>
+            <h3>Tabang</h3>
+            <p>Built with a five-member team from ASU Kalibo for KomsaiHack 2026: RiskReady, a hackathon on real-world risk challenges such as fire, storm surge, flooding and landslides. <i>Tabang</i> means "help" in Hiligaynon and Aklanon.</p>
+            <div class="meta"><span>UPV Komsai.Org</span><span>KomsaiHack 2026</span></div>
+          </div>
+        </article>
+        <article class="card build tilt" data-reveal style="--d:100ms">
+          <div class="ph"><img src="assets/images/startup-challenge-team.jpg" alt="John Emmanuel and the Developer's Guild team with medals and certificates of recognition at the Philippine Startup Challenge regional pitching" loading="lazy"><span class="rank soft">Regional pitching</span></div>
+          <div class="bd">
+            <span class="tag" style="justify-self:start;width:max-content">Startup pitch</span>
+            <h3>Philippine Startup Challenge</h3>
+            <p>Pitched a startup idea with the Developer's Guild at the DICT Philippine Startup Challenge regional pitching competition. The team took home medals and certificates of recognition.</p>
+            <div class="meta"><span>DICT · ICT Industry Development Bureau</span></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACHIEVEMENTS -->
+  <section class="block" id="achievements">
+    <div class="wrap">
+      <div class="head">
+        <div><span class="eyebrow">Certifications &amp; achievements</span><h2 class="split">Proof of <em>work.</em></h2></div>
+        <div class="tabs" role="tablist" aria-label="Achievement type" id="tabs">
+          <span class="tab-pill" id="tabPill"></span>
+          <button role="tab" id="tab-comp" aria-selected="true" aria-controls="panel-comp">Competitions<small>5</small></button>
+          <button role="tab" id="tab-cert" aria-selected="false" aria-controls="panel-cert">Certificates<small>5</small></button>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-comp" role="tabpanel" aria-labelledby="tab-comp">
+        <div class="timeline" id="timeline">
+          <span class="beam" id="beam"></span>
+
+          <div class="ev-wrap" data-reveal><span class="tl-node"></span>
+            <article class="card ev">
+              <div class="bd">
+                <span class="when">OCT 23, 2026 · SAMS21 HOTEL, ILOILO CITY</span>
+                <h3>HackForGov 5 · Regional Qualifying Round</h3>
+                <p>Team CyberGuild of the ASU Kalibo College of Computer Studies went from regional qualifier to a Top 5 finish in DICT and CERT-PH's government cybersecurity competition.</p>
+                <div class="meta"><span class="rank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 9.2 8.3 2 9.2l5.4 4.8L5.8 21 12 17.3 18.2 21l-1.6-7 5.4-4.8-7.2-.9z"/></svg>Top 5</span><span class="tag">Cybersecurity</span><span class="tag">Team CyberGuild</span></div>
+              </div>
+              <div class="thumbs">
+                <button data-lb="assets/images/hackforgov5-team.jpg" data-cap="Team CyberGuild with their certificates · HackForGov 5"><img src="assets/images/hackforgov5-team.jpg" alt="Team CyberGuild holding certificates at HackForGov 5" loading="lazy"></button>
+                <button data-lb="assets/images/hackforgov5-announcement.jpg" data-cap="ASU Kalibo announcement · CyberGuild ranks among Top 5 in HackForGov5"><img src="assets/images/hackforgov5-announcement.jpg" alt="Aklan State University announcement of CyberGuild's Top 5 finish" loading="lazy"></button>
+              </div>
+            </article>
+          </div>
+
+          <div class="ev-wrap" data-reveal><span class="tl-node"></span>
+            <article class="card ev">
+              <div class="bd">
+                <span class="when">2026 · UP VISAYAS KOMSAI.ORG</span>
+                <h3>KomsaiHack 2026: RiskReady</h3>
+                <p>Competed as Team Tabang representing Aklan State University – Kalibo, building for real-world disaster and risk challenges. Recognized for innovation, teamwork and problem solving.</p>
+                <div class="meta"><span class="rank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 9.2 8.3 2 9.2l5.4 4.8L5.8 21 12 17.3 18.2 21l-1.6-7 5.4-4.8-7.2-.9z"/></svg>Top 6</span><span class="tag">Hackathon</span><span class="tag">Team Tabang</span></div>
+              </div>
+              <div class="thumbs">
+                <button data-lb="assets/images/komsaihack-team-tabang.jpg" data-cap="Team Tabang · KomsaiHack 2026: RiskReady"><img src="assets/images/komsaihack-team-tabang.jpg" alt="Team Tabang poster" loading="lazy"></button>
+                <button data-lb="assets/certificates/komsaihack-2026.jpg" data-cap="Certificate of Appearance · KomsaiHack 2026: RiskReady"><img src="assets/certificates/komsaihack-2026.jpg" alt="KomsaiHack 2026 certificate" loading="lazy"></button>
+              </div>
+            </article>
+          </div>
+
+          <div class="ev-wrap" data-reveal><span class="tl-node"></span>
+            <article class="card ev">
+              <div class="bd">
+                <span class="when">2026 · DICT · ICT INDUSTRY DEVELOPMENT BUREAU</span>
+                <h3>Philippine Startup Challenge</h3>
+                <p>Regional pitching competition under DICT's Innovative Startup Fest. Pitched with the Developer's Guild and received medals and certificates of recognition.</p>
+                <div class="meta"><span class="rank soft">Regional pitching</span><span class="tag">Startup</span></div>
+              </div>
+              <div class="thumbs">
+                <button data-lb="assets/images/startup-challenge-team.jpg" data-cap="Philippine Startup Challenge · regional pitching competition"><img src="assets/images/startup-challenge-team.jpg" alt="Team photo at the Philippine Startup Challenge" loading="lazy"></button>
+              </div>
+            </article>
+          </div>
+
+          <div class="ev-wrap" data-reveal><span class="tl-node"></span>
+            <article class="card ev">
+              <div class="bd">
+                <span class="when">MAY 21–23, 2026 · CENTRAL PHILIPPINE UNIVERSITY, ILOILO CITY</span>
+                <h3>Ready, Spark, Charge 2026: Hacking the Future of Energy</h3>
+                <p>Three-day energy hackathon by New Energy Nexus Philippines with UMWAD Western Visayas, CPUGAD TBI and DOST Western Visayas iHubs.</p>
+                <div class="meta"><span class="rank soft">Participant</span><span class="tag">Clean energy</span></div>
+              </div>
+              <div class="thumbs">
+                <button data-lb="assets/certificates/ready-spark-charge-2026.jpg" data-cap="Certificate of Participation · Ready, Spark, Charge 2026"><img src="assets/certificates/ready-spark-charge-2026.jpg" alt="Ready, Spark, Charge 2026 certificate" loading="lazy"></button>
+              </div>
+            </article>
+          </div>
+
+          <div class="ev-wrap" data-reveal><span class="tl-node"></span>
+            <article class="card ev">
+              <div class="bd">
+                <span class="when">REGIONAL SCIENCE &amp; TECHNOLOGY WEEK</span>
+                <h3>Regional Science &amp; Technology Week</h3>
+                <p>Represented home as Team Malinaonon Musketeers and received a Certificate of Participation.</p>
+                <div class="meta"><span class="rank soft">Participant</span><span class="tag">Team Malinaonon Musketeers</span></div>
+              </div>
+              <div class="thumbs">
+                <button data-lb="assets/images/rstw-malinaonon-musketeers.jpg" data-cap="Team Malinaonon Musketeers · Regional Science & Technology Week"><img src="assets/images/rstw-malinaonon-musketeers.jpg" alt="Team Malinaonon Musketeers with their certificate" loading="lazy" style="object-position:center 60%"></button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-cert" role="tabpanel" aria-labelledby="tab-cert" hidden>
+        <div class="certs">
+          <button class="card cert tilt" data-lb="assets/certificates/dict-cybersecurity-ethical-hacking.jpg" data-cap="DICT Region VI · Cybersecurity Awareness and Mentoring on Ethical Hacking · Sep 11, 2026">
+            <div class="ph"><img src="assets/certificates/dict-cybersecurity-ethical-hacking.jpg" alt="DICT cybersecurity certificate" loading="lazy"></div>
+            <div class="bd"><span class="issuer">DICT Region VI · CyberSinag</span><h3>Cybersecurity Awareness &amp; Mentoring on Ethical Hacking</h3><span class="when">Sep 11, 2026 · Google Meet</span></div>
+          </button>
+          <button class="card cert tilt" data-lb="assets/certificates/datacamp-intro-to-java.jpg" data-cap="DataCamp · Introduction to Java · 4 hours · Sep 8, 2026">
+            <div class="ph"><img src="assets/certificates/datacamp-intro-to-java.jpg" alt="DataCamp Introduction to Java certificate" loading="lazy"></div>
+            <div class="bd"><span class="issuer">DataCamp</span><h3>Introduction to Java</h3><span class="when">Sep 8, 2026 · 4 hours</span></div>
+          </button>
+          <button class="card cert tilt" data-lb="assets/certificates/datacamp-importing-data-in-java.jpg" data-cap="DataCamp · Importing Data in Java · 3 hours · Sep 8, 2026">
+            <div class="ph"><img src="assets/certificates/datacamp-importing-data-in-java.jpg" alt="DataCamp Importing Data in Java certificate" loading="lazy"></div>
+            <div class="bd"><span class="issuer">DataCamp</span><h3>Importing Data in Java</h3><span class="when">Sep 8, 2026 · 3 hours</span></div>
+          </button>
+          <button class="card cert tilt" data-lb="assets/certificates/komsaihack-2026.jpg" data-cap="UPV Komsai.Org · KomsaiHack 2026: RiskReady · Certificate of Appearance">
+            <div class="ph"><img src="assets/certificates/komsaihack-2026.jpg" alt="KomsaiHack 2026 certificate of appearance" loading="lazy"></div>
+            <div class="bd"><span class="issuer">UPV Komsai.Org</span><h3>KomsaiHack 2026: RiskReady</h3><span class="when">2026 · Certificate of Appearance</span></div>
+          </button>
+          <button class="card cert tilt" data-lb="assets/certificates/ready-spark-charge-2026.jpg" data-cap="New Energy Nexus Philippines · Ready, Spark, Charge 2026 · May 23, 2026">
+            <div class="ph"><img src="assets/certificates/ready-spark-charge-2026.jpg" alt="Ready, Spark, Charge 2026 certificate" loading="lazy"></div>
+            <div class="bd"><span class="issuer">New Energy Nexus PH</span><h3>Ready, Spark, Charge 2026</h3><span class="when">May 21–23, 2026 · CPU Iloilo</span></div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="block" id="contact">
+    <div class="wrap">
+      <div class="contact" data-reveal>
+        <span class="eyebrow">Contact</span>
+        <h2 class="split">Let's build something <span>secure.</span></h2>
+        <p>Open to hackathon teams, collaborations and student projects. Email is the fastest way to reach me.</p>
+        <div class="email">
+          <code id="emailText">suantejohnemmanuel@gmail.com</code>
+          <button class="btn primary mag" id="copyBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+            Copy email
+          </button>
+        </div>
+        <div class="socials">
+          <a class="social" href="https://github.com/DeadByte753" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.6 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>
+            <div><b>GitHub</b><span>@DeadByte753</span></div>
+            <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
+          </a>
+          <a class="social" href="https://www.linkedin.com/in/john-emmanuel-suante-b54569441/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.4 20.5h-3.6v-5.6c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9v5.7H9.3V9h3.4v1.6c.5-.9 1.6-1.8 3.4-1.8 3.6 0 4.3 2.4 4.3 5.5v6.2zM5.3 7.4a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.1 20.5H3.5V9h3.6v11.5zM22.2 0H1.8C.8 0 0 .8 0 1.7v20.6c0 .9.8 1.7 1.8 1.7h20.4c1 0 1.8-.8 1.8-1.7V1.7C24 .8 23.2 0 22.2 0z"/></svg>
+            <div><b>LinkedIn</b><span>John Emmanuel Suante</span></div>
+            <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
+          </a>
+          <a class="social" href="https://www.facebook.com/search/top?q=John%20Emmanuel%20Suante" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12a12 12 0 1 0-13.9 11.9v-8.4h-3V12h3V9.4c0-3 1.8-4.7 4.5-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.4l-.5 3.5h-2.9v8.4A12 12 0 0 0 24 12z"/></svg>
+            <div><b>Facebook</b><span>John Emmanuel Suante</span></div>
+            <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© 2026 John Emmanuel T. Suante</span>
+      <span>Malinao, Aklan · <span id="clock2">--:--</span> PHT</span>
+    </div>
+  </footer>
+
+  <button class="icon-btn to-top" id="toTop" aria-label="Back to top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button>
+  <div class="toast" id="toast" role="status">Copied</div>
+
+  <div class="modal lb" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Image viewer">
+    <figure class="box" style="margin:0">
+      <button class="icon-btn close" data-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      <img id="lbImg" alt="">
+      <figcaption><span id="lbCap"></span><span>Esc to close</span></figcaption>
+    </figure>
+  </div>
+
+  <div class="modal resume" id="resume" hidden role="dialog" aria-modal="true" aria-labelledby="cvName">
+    <div class="box">
+      <button class="icon-btn close" data-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      <div class="cv-head">
+        <div><h2 id="cvName">John Emmanuel T. Suante</h2><p>IT Student · Aspiring Cybersecurity Professional</p></div>
+        <div class="ct">suantejohnemmanuel@gmail.com<br>github.com/DeadByte753<br>Malinao, Aklan, Philippines</div>
+      </div>
+      <div class="cv-sec"><h4>Education</h4><ul><li><b>BS Information Technology</b>, major in Instructional System Technology <span>· Aklan State University – Kalibo · 2nd Year</span></li></ul></div>
+      <div class="cv-sec"><h4>Skills</h4><ul>
+        <li><b>Languages:</b> <span>TypeScript, JavaScript, Java, Dart, Python</span></li>
+        <li><b>Web &amp; Mobile:</b> <span>React, HTML, CSS, Tailwind CSS, Flask, Flutter</span></li>
+        <li><b>Security:</b> <span>CTF problem solving, ethical hacking fundamentals, secure authentication</span></li>
+        <li><b>Tools:</b> <span>Git &amp; GitHub, Windows, Linux, Render</span></li>
+      </ul></div>
+      <div class="cv-sec"><h4>Projects</h4><ul>
+        <li><b>Monetrax</b> <span>· Full-stack student budgeting app with wallets, budgets, savings goals and analytics (Python, Flask, PostgreSQL, Tailwind)</span></li>
+        <li><b>Tabang</b> <span>· Team build for KomsaiHack 2026: RiskReady</span></li>
+      </ul></div>
+      <div class="cv-sec"><h4>Achievements</h4><ul>
+        <li><b>Top 5</b> <span>· HackForGov 5 Regional Qualifying Round, Team CyberGuild (Oct 2026)</span></li>
+        <li><b>Top 6</b> <span>· KomsaiHack 2026: RiskReady, Team Tabang</span></li>
+        <li>Philippine Startup Challenge <span>· Regional pitching competition</span></li>
+        <li>Ready, Spark, Charge 2026 <span>· Energy hackathon participant (May 2026)</span></li>
+        <li>Regional Science &amp; Technology Week <span>· Team Malinaonon Musketeers</span></li>
+      </ul></div>
+      <div class="cv-sec" style="border-bottom:0"><h4>Certificates</h4><ul>
+        <li>Cybersecurity Awareness &amp; Mentoring on Ethical Hacking <span>· DICT Region VI (Sep 2026)</span></li>
+        <li>Introduction to Java · Importing Data in Java <span>· DataCamp (Sep 2026)</span></li>
+      </ul></div>
+      <div class="cv-actions">
+        <button class="btn primary" id="copyCv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Copy resume text</button>
+        <a class="btn ghost" href="https://www.linkedin.com/in/john-emmanuel-suante-b54569441/" target="_blank" rel="noopener">Open LinkedIn</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
