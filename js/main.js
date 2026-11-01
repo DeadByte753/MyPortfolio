@@ -67,7 +67,7 @@ $(".logo").addEventListener("mouseenter", function(){
 $("#name").addEventListener("mouseenter", function(){ $$("[data-scramble]").forEach(function(el){ scramble(el,600) }); });
 
 /* ---------- typed roles ---------- */
-var roles = ["IT Student","Aspiring Cybersecurity Professional","React & Flutter Developer","Hackathon & CTF Competitor"];
+var roles = ["IT Student","Exploring the World of Cybersecurity","React & Flutter Developer","Hackathon & CTF Competitor"];
 var typed = $("#typed");
 if(!RM){
   var ri=0, ci=roles[0].length, del=true;
