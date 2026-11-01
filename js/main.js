@@ -112,7 +112,18 @@ if("IntersectionObserver" in window && !RM){
   var vh = innerHeight;
   targets.forEach(function(el){ if(el.getBoundingClientRect().top > vh*0.92) el.classList.add("pending"); });
   var io = new IntersectionObserver(function(es){
-    es.forEach(function(en){ if(en.isIntersecting){ en.target.classList.remove("pending"); io.unobserve(en.target);} });
+    // things that scroll into view together cascade in, ~90ms apart
+    var n = 0;
+    es.forEach(function(en){
+      if(!en.isIntersecting) return;
+      var el = en.target; io.unobserve(el);
+      if(el.hasAttribute("data-reveal")){
+        if(!el.style.getPropertyValue("--d")) el.style.setProperty("--d", (n++*90)+"ms");
+        el.classList.add("in");
+        el.addEventListener("animationend", function done(e){ if(e.target!==el) return; el.classList.remove("in"); el.removeEventListener("animationend", done); });
+      }
+      el.classList.remove("pending");
+    });
   },{rootMargin:"0px 0px -8% 0px", threshold:0.05});
   targets.forEach(function(el){ if(el.classList.contains("pending")) io.observe(el); });
 }
@@ -123,11 +134,9 @@ var evs = $$(".ev-wrap");
 var scrollQueued = false;
 function onScroll(){
   scrollQueued = false;
-  // read everything first…
   var y = scrollY, vh = innerHeight, h = document.documentElement.scrollHeight - vh;
   var mid = vh*0.6, r = tl.offsetParent ? tl.getBoundingClientRect() : null;
   var lit = r ? evs.map(function(ev){ return ev.getBoundingClientRect().top + 38 < mid; }) : null;
-  // …then write, so the browser never has to re-layout mid-handler
   prog.style.transform = "scaleX(" + (h>0 ? y/h : 0) + ")";
   nav.classList.toggle("scrolled", y > 10);
   toTop.classList.toggle("show", y > vh*1.2);
@@ -157,13 +166,9 @@ if("IntersectionObserver" in window){
 /* ---------- cursor, magnetic, tilt ---------- */
 if(FINE && !RM){
   var cur = $("#cursor"), cx=innerWidth/2, cy=innerHeight/2, tx=cx, ty=cy;
-  var curRun = false;
-  function curLoop(){
-    cx+=(tx-cx)*.2; cy+=(ty-cy)*.2; cur.style.transform="translate("+cx+"px,"+cy+"px)";
-    if(Math.abs(tx-cx)+Math.abs(ty-cy) > .3) requestAnimationFrame(curLoop); else curRun = false;
-  }
-  addEventListener("mousemove", function(e){ tx=e.clientX; ty=e.clientY; cur.classList.add("on"); if(!curRun){ curRun = true; requestAnimationFrame(curLoop); } }, {passive:true});
+  addEventListener("mousemove", function(e){ tx=e.clientX; ty=e.clientY; cur.classList.add("on"); });
   document.addEventListener("mouseleave", function(){ cur.classList.remove("on"); });
+  (function f(){ cx+=(tx-cx)*.2; cy+=(ty-cy)*.2; cur.style.transform="translate("+cx+"px,"+cy+"px)"; requestAnimationFrame(f); })();
   document.addEventListener("mouseover", function(e){ cur.classList.toggle("big", !!e.target.closest("a,button,.chip,[data-lb]")); });
 
   $$(".mag").forEach(function(b){
@@ -339,42 +344,38 @@ clock(); setInterval(clock, 1000);
 
 /* ---------- hero dot field ---------- */
 (function(){
-  var cv = $("#field"), ctx = cv.getContext("2d"), W, H, dpr, mx=-999, my=-999, run=true, col, acc;
+  var cv = $("#field"), ctx = cv.getContext("2d"), paths = [], W, H, dpr, mx=-999, my=-999, run=true, col, acc;
   function size(){ dpr=Math.min(2,devicePixelRatio||1); W=cv.offsetWidth; H=cv.offsetHeight; cv.width=W*dpr; cv.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); colors(); draw(performance.now()); }
   function colors(){ col=cssVar("--dot"); acc=cssVar("--accent"); }
   themeListeners.push(function(){ colors(); draw(performance.now()); });
   var hero = $(".hero");
-  hero.addEventListener("mousemove", function(e){ var r=cv.getBoundingClientRect(); mx=e.clientX-r.left; my=e.clientY-r.top; }, {passive:true});
+  hero.addEventListener("mousemove", function(e){ var r=cv.getBoundingClientRect(); mx=e.clientX-r.left; my=e.clientY-r.top; });
   hero.addEventListener("mouseleave", function(){ mx=my=-999; });
-  // Dots are grouped into a handful of alpha "buckets" per colour, so each frame is
-  // ~20 fill() calls instead of one per dot (≈1,500 on desktop).
-  var LV = 10, paths = [];
   function draw(t){
     ctx.clearRect(0,0,W,H);
-    var s = W<600 ? 22 : 28, k, i;
-    for(k=0;k<LV*2;k++){ paths[k] = paths[k] || []; paths[k].length = 0; }
+    var s = W<600 ? 22 : 28;
+    for(var b=0;b<20;b++){ paths[b] = paths[b] || []; paths[b].length = 0; }
     for(var y=s/2; y<H; y+=s){
       for(var x=s/2; x<W; x+=s){
         var dx=x-mx, dy=y-my, d=Math.sqrt(dx*dx+dy*dy);
         var hov = Math.max(0, 1 - d/170);
         var wave = RM ? 0 : (Math.sin(x*0.012 + y*0.008 - t*0.0011)+1)/2;
-        var a = Math.min(1, 0.2 + wave*0.3 + hov*0.6);
+        var a = 0.2 + wave*0.3 + hov*0.6;
         var r = 1 + hov*1.9 + wave*0.35;
         var ox = hov ? -dx/d*hov*6 : 0, oy = hov ? -dy/d*hov*6 : 0;
-        paths[(hov>0.05 ? LV : 0) + Math.min(LV-1, Math.floor(a*LV))].push(x+ox, y+oy, r);
+        paths[(hov>0.05 ? 10 : 0) + Math.min(9, Math.floor(Math.min(1,a)*10))].push(x+ox, y+oy, r);
       }
     }
-    for(k=0;k<LV*2;k++){
+    for(var k=0;k<20;k++){
       var P = paths[k]; if(!P.length) continue;
-      ctx.globalAlpha = ((k%LV)+0.5)/LV; ctx.fillStyle = k>=LV ? acc : col;
+      ctx.globalAlpha = ((k%10)+0.5)/10; ctx.fillStyle = k>=10 ? acc : col;
       ctx.beginPath();
-      for(i=0;i<P.length;i+=3){ ctx.moveTo(P[i]+P[i+2], P[i+1]); ctx.arc(P[i], P[i+1], P[i+2], 0, 6.283); }
+      for(var i=0;i<P.length;i+=3){ ctx.moveTo(P[i]+P[i+2], P[i+1]); ctx.arc(P[i], P[i+1], P[i+2], 0, 6.283); }
       ctx.fill();
     }
     ctx.globalAlpha = 1;
   }
-  var last = 0;
-  function loop(t){ if(run && t-last > 32){ last = t; draw(t); } requestAnimationFrame(loop); }
+  function loop(t){ if(run) draw(t); requestAnimationFrame(loop); }
   addEventListener("resize", size); size();
   if(!RM){
     if("IntersectionObserver" in window) new IntersectionObserver(function(e){ run = e[0].isIntersecting; }).observe(cv);
@@ -441,24 +442,23 @@ clock(); setInterval(clock, 1000);
     var g = ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,glowR*1.4);
     g.addColorStop(0, hexA(col.acc,.14)); g.addColorStop(1, hexA(col.acc,0));
     ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
-    var LV=10, bk, z;
-    for(bk=0;bk<LV*2;bk++){ mpaths[bk] = mpaths[bk] || []; mpaths[bk].length = 0; }
+    for(var b=0;b<20;b++){ mpaths[b] = mpaths[b] || []; mpaths[b].length = 0; }
     for(var i=0;i<dots.length;i++){
       var p=dots[i]; if(p.d > reveal) continue;
       var appear = Math.min(1,(reveal-p.d)/120);
       var near = Math.max(0, 1-p.d/glowR);
-      var dw = p.d-waveR, w = dw*dw < 8100 ? Math.exp(-dw*dw/900) : 0;
-      var hx=p.x-mx, hy=p.y-my, hov = (hx*hx+hy*hy < 4900) ? 1-Math.sqrt(hx*hx+hy*hy)/70 : 0;
+      var w = Math.exp(-Math.pow(p.d-waveR,2)/900);
+      var hx=p.x-mx, hy=p.y-my, hd=Math.sqrt(hx*hx+hy*hy), hov=Math.max(0,1-hd/70);
       var tw = RM?0:(Math.sin(t*2+p.r*20)+1)*0.08;
-      var a = Math.min(1,(0.38 + near*0.5 + w*0.5 + hov*0.6 + tw) * appear);
+      var a = (0.38 + near*0.5 + w*0.5 + hov*0.6 + tw) * appear;
       var r = (1.15 + near*0.9 + w*0.9 + hov*1.4) * (0.4+0.6*appear);
-      mpaths[((near>0.3 || w>0.35 || hov>0.1) ? LV : 0) + Math.min(LV-1, Math.floor(a*LV))].push(p.x, p.y, r);
+      mpaths[((near>0.3 || w>0.35 || hov>0.1) ? 10 : 0) + Math.min(9, Math.floor(Math.min(1,a)*10))].push(p.x, p.y, r);
     }
-    for(bk=0;bk<LV*2;bk++){
+    for(var bk=0;bk<20;bk++){
       var P = mpaths[bk]; if(!P.length) continue;
-      ctx.globalAlpha = ((bk%LV)+0.5)/LV; ctx.fillStyle = bk>=LV ? col.acc : col.muted;
+      ctx.globalAlpha = ((bk%10)+0.5)/10; ctx.fillStyle = bk>=10 ? col.acc : col.muted;
       ctx.beginPath();
-      for(z=0;z<P.length;z+=3){ ctx.moveTo(P[z]+P[z+2], P[z+1]); ctx.arc(P[z], P[z+1], P[z+2], 0, 6.283); }
+      for(var z=0;z<P.length;z+=3){ ctx.moveTo(P[z]+P[z+2], P[z+1]); ctx.arc(P[z], P[z+1], P[z+2], 0, 6.283); }
       ctx.fill();
     }
     ctx.globalAlpha=1;
@@ -490,8 +490,7 @@ clock(); setInterval(clock, 1000);
     // home marker
     var pulse = RM?0.5:(t*0.6)%1;
     for(var j=0;j<2;j++){ var ph=(pulse+j*0.5)%1; ctx.strokeStyle=hexA(col.acc,(1-ph)*0.8); ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(h[0],h[1],6+ph*34,0,6.283); ctx.stroke(); }
-    ctx.fillStyle=hexA(col.acc,.25); ctx.beginPath(); ctx.arc(h[0],h[1],12,0,6.283); ctx.fill();
-    ctx.fillStyle=col.acc; ctx.beginPath(); ctx.arc(h[0],h[1],6,0,6.283); ctx.fill();
+    ctx.fillStyle=col.acc; ctx.shadowColor=col.acc; ctx.shadowBlur=18; ctx.beginPath(); ctx.arc(h[0],h[1],6,0,6.283); ctx.fill(); ctx.shadowBlur=0;
     ctx.fillStyle=col.bg; ctx.beginPath(); ctx.arc(h[0],h[1],2.2,0,6.283); ctx.fill();
     label("Malinao", "Poblacion · home", h[0], h[1], col.acc, false, true); if(h[0] > W-150){}
   }
@@ -507,13 +506,12 @@ clock(); setInterval(clock, 1000);
     c=c.trim(); if(c[0]==="#"){ var n=c.slice(1); if(n.length===3) n=n.replace(/./g,"$&$&"); var v=parseInt(n,16); return "rgba("+(v>>16&255)+","+(v>>8&255)+","+(v&255)+","+a+")"; }
     var m=c.match(/[\d.]+/g); return m ? "rgba("+m[0]+","+m[1]+","+m[2]+","+a+")" : c;
   }
-  cv.addEventListener("mousemove", function(e){ var r=cv.getBoundingClientRect(); mx=e.clientX-r.left; my=e.clientY-r.top; }, {passive:true});
+  cv.addEventListener("mousemove", function(e){ var r=cv.getBoundingClientRect(); mx=e.clientX-r.left; my=e.clientY-r.top; });
   cv.addEventListener("mouseleave", function(){ mx=my=-999; });
   themeListeners.push(function(){ colors(); if(RM||!visible) draw(performance.now()); });
   addEventListener("resize", function(){ build(); draw(performance.now()); });
   colors(); build(); draw(performance.now());
-  var mlast = 0;
-  function loop(now){ if(visible && now-mlast > 32){ mlast = now; draw(now); } requestAnimationFrame(loop); }
+  function loop(now){ if(visible) draw(now); requestAnimationFrame(loop); }
   if(!RM){
     if("IntersectionObserver" in window){
       new IntersectionObserver(function(e){ var was=visible; visible=e[0].isIntersecting; if(visible && !was && t0!==null && performance.now()-t0 > 8000){} },{threshold:0.15}).observe(cv);
