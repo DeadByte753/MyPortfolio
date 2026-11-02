@@ -508,7 +508,7 @@ clock(); setInterval(clock, 1000);
 
   var cv=$("#map"), ctx=cv.getContext("2d"), W,H,dpr,k,cosL=Math.cos(HOME[1]*Math.PI/180), dots=[], mpaths=[], step, col={}, mx=-999,my=-999, t0=null, visible=false;
   function proj(ll){ return [W/2 + (ll[0]-HOME[0])*cosL*k, H/2 - (ll[1]-HOME[1])*k]; }
-  function colors(){ col.dot=cssVar("--dot"); col.acc=cssVar("--accent"); col.amber=cssVar("--amber"); col.fg=cssVar("--fg"); col.muted=cssVar("--muted"); col.bg=cssVar("--bg-2"); col.font=getComputedStyle(document.body).fontFamily; col.mono=cssVar("--f-mono"); }
+  function colors(){ col.dot=cssVar("--dot"); col.acc=getComputedStyle(cv).getPropertyValue("--map-acc").trim()||cssVar("--accent"); col.amber=cssVar("--amber"); col.fg=cssVar("--fg"); col.muted=cssVar("--muted"); col.bg=cssVar("--bg-2"); col.font=getComputedStyle(document.body).fontFamily; col.mono=cssVar("--f-mono"); }
   function build(){
     dpr=Math.min(2,devicePixelRatio||1); W=cv.offsetWidth; H=cv.offsetHeight; cv.width=W*dpr; cv.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
     k = Math.max(H/1.8, W/(2.9*cosL));      // px per degree
@@ -567,20 +567,89 @@ clock(); setInterval(clock, 1000);
         label(pl.name, pl.sub, q[0], q[1], c, pl.kind==="campus", false, pl.kind==="campus");
       }
     });
-    // crosshair + rotating reticle on home
-    ctx.save(); ctx.strokeStyle=hexA(col.acc,.22); ctx.lineWidth=1; ctx.setLineDash([2,5]);
-    ctx.beginPath(); ctx.moveTo(0,h[1]); ctx.lineTo(W,h[1]); ctx.moveTo(h[0],0); ctx.lineTo(h[0],H); ctx.stroke(); ctx.restore();
-    ctx.save(); ctx.translate(h[0],h[1]); ctx.rotate(RM?0:t*0.6); ctx.strokeStyle=hexA(col.acc,.85); ctx.lineWidth=1.6;
-    for(var q=0;q<4;q++){ ctx.beginPath(); ctx.arc(0,0,46,q*Math.PI/2+0.25,q*Math.PI/2+1.15); ctx.stroke(); }
-    ctx.rotate(RM?0:-t*1.4); ctx.strokeStyle=hexA(col.acc,.4);
-    for(var q2=0;q2<8;q2++){ ctx.rotate(Math.PI/4); ctx.beginPath(); ctx.moveTo(56,0); ctx.lineTo(62,0); ctx.stroke(); }
+    drawHome(h[0], h[1], t);
+    drawCursor(h[0], h[1]);
+  }
+  /* home marker: radar lock-on — sweep, ranged rings with ticks, rotating brackets,
+     breathing corner locks, pulses, glowing core, and a callout tag */
+  function drawHome(X, Y, t){
+    var R1=22, R2=46, R3=72, sp=RM?0:t, TAU=6.2832;
+    ctx.save(); ctx.strokeStyle=hexA(col.acc,.16); ctx.lineWidth=1; ctx.setLineDash([2,6]);
+    ctx.beginPath(); ctx.moveTo(0,Y); ctx.lineTo(X-R3-12,Y); ctx.moveTo(X+R3+12,Y); ctx.lineTo(W,Y);
+    ctx.moveTo(X,0); ctx.lineTo(X,Y-R3-12); ctx.moveTo(X,Y+R3+12); ctx.lineTo(X,H); ctx.stroke(); ctx.restore();
+    // scope backdrop keeps the marker legible over dense dots
+    var bg=ctx.createRadialGradient(X,Y,0,X,Y,R3+6); bg.addColorStop(0,hexA(col.bg,.55)); bg.addColorStop(.85,hexA(col.bg,.35)); bg.addColorStop(1,hexA(col.bg,0));
+    ctx.fillStyle=bg; ctx.beginPath(); ctx.arc(X,Y,R3+6,0,TAU); ctx.fill();
+    // sweep
+    if(!RM && ctx.createConicGradient){
+      var ang=(sp*1.1)%TAU, cg=ctx.createConicGradient(ang,X,Y);
+      cg.addColorStop(0,hexA(col.acc,0)); cg.addColorStop(.78,hexA(col.acc,0)); cg.addColorStop(.995,hexA(col.acc,.26)); cg.addColorStop(1,hexA(col.acc,0));
+      ctx.fillStyle=cg; ctx.beginPath(); ctx.arc(X,Y,R3,0,TAU); ctx.fill();
+      ctx.strokeStyle=hexA(col.acc,.6); ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(X,Y); ctx.lineTo(X+Math.cos(ang)*R3, Y+Math.sin(ang)*R3); ctx.stroke();
+    }
+    // range rings
+    ctx.lineWidth=1;
+    ctx.strokeStyle=hexA(col.acc,.38); ctx.beginPath(); ctx.arc(X,Y,R1,0,TAU); ctx.stroke();
+    ctx.save(); ctx.setLineDash([3,4]); ctx.strokeStyle=hexA(col.acc,.28); ctx.beginPath(); ctx.arc(X,Y,R2,0,TAU); ctx.stroke(); ctx.restore();
+    ctx.strokeStyle=hexA(col.acc,.22); ctx.beginPath(); ctx.arc(X,Y,R3,0,TAU); ctx.stroke();
+    // compass ticks on the outer ring, slowly rotating
+    ctx.save(); ctx.translate(X,Y); ctx.rotate(-sp*0.05);
+    for(var i=0;i<72;i++){ var maj=i%9===0; ctx.strokeStyle=hexA(col.acc, maj?.7:.28); ctx.lineWidth=maj?1.4:1;
+      var c=Math.cos(i*TAU/72), s=Math.sin(i*TAU/72); ctx.beginPath(); ctx.moveTo(c*R3,s*R3); ctx.lineTo(c*(R3+(maj?7:3.5)),s*(R3+(maj?7:3.5))); ctx.stroke(); }
     ctx.restore();
-    // home marker
-    var pulse = RM?0.5:(t*0.6)%1;
-    for(var j=0;j<2;j++){ var ph=(pulse+j*0.5)%1; ctx.strokeStyle=hexA(col.acc,(1-ph)*0.8); ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(h[0],h[1],6+ph*34,0,6.283); ctx.stroke(); }
-    ctx.fillStyle=col.acc; ctx.shadowColor=col.acc; ctx.shadowBlur=18; ctx.beginPath(); ctx.arc(h[0],h[1],6,0,6.283); ctx.fill(); ctx.shadowBlur=0;
-    ctx.fillStyle=col.bg; ctx.beginPath(); ctx.arc(h[0],h[1],2.2,0,6.283); ctx.fill();
-    label("Malinao", "Poblacion · home", h[0], h[1], col.acc, false, true); if(h[0] > W-150){}
+    // rotating bracket arcs
+    ctx.save(); ctx.translate(X,Y); ctx.rotate(sp*0.6); ctx.strokeStyle=hexA(col.acc,.85); ctx.lineWidth=1.8; ctx.lineCap="round";
+    for(var q=0;q<3;q++){ ctx.beginPath(); ctx.arc(0,0,R2,q*TAU/3+0.2,q*TAU/3+0.95); ctx.stroke(); }
+    ctx.restore();
+    // pulses
+    var pulse=RM?0.5:(t*0.5)%1;
+    for(var j=0;j<2;j++){ var ph=(pulse+j*0.5)%1; ctx.strokeStyle=hexA(col.acc,(1-ph)*0.6); ctx.lineWidth=1.2; ctx.beginPath(); ctx.arc(X,Y,8+ph*(R3-8),0,TAU); ctx.stroke(); }
+    // breathing lock-on corners
+    var L=13+(RM?0:Math.sin(t*2.2)*1.6), l=5;
+    ctx.strokeStyle=hexA(col.fg,.85); ctx.lineWidth=1.4; ctx.lineCap="square"; ctx.beginPath();
+    [[-1,-1],[1,-1],[1,1],[-1,1]].forEach(function(d){ var cx=X+d[0]*L, cy=Y+d[1]*L; ctx.moveTo(cx-d[0]*l,cy); ctx.lineTo(cx,cy); ctx.lineTo(cx,cy-d[1]*l); });
+    ctx.stroke(); ctx.lineCap="butt";
+    // core
+    ctx.strokeStyle=hexA(col.acc,.9); ctx.lineWidth=1.2; ctx.beginPath(); ctx.arc(X,Y,8.5,0,TAU); ctx.stroke();
+    ctx.fillStyle=col.acc; ctx.shadowColor=col.acc; ctx.shadowBlur=16; ctx.beginPath(); ctx.arc(X,Y,4.5,0,TAU); ctx.fill(); ctx.shadowBlur=0;
+    ctx.fillStyle=col.fg; ctx.beginPath(); ctx.arc(X,Y,1.6,0,TAU); ctx.fill();
+    // callout: elbow leader to a tag (right, else left, else below on narrow maps)
+    var t1="MALINAO", t2="HOME · 11.64°N 122.31°E";
+    ctx.font="600 12px "+col.mono; var w1=ctx.measureText(t1).width; ctx.font="400 10px "+col.mono; var w2=ctx.measureText(t2).width;
+    var bw=Math.max(w1,w2)+20, bh=40, d=R3*.72, bx, by;
+    ctx.strokeStyle=hexA(col.acc,.7); ctx.fillStyle=col.acc; ctx.lineWidth=1; ctx.beginPath();
+    var side = X+d+32+bw < W-8 ? 1 : X-d-32-bw > 8 ? -1 : 0;
+    if(side){
+      var ex=X+side*d, ey=Y-d, hx=ex+side*26;
+      ctx.moveTo(X+side*11,Y-11); ctx.lineTo(ex,ey); ctx.lineTo(hx,ey); ctx.stroke();
+      ctx.beginPath(); ctx.arc(hx,ey,2,0,TAU); ctx.fill();
+      bx = side>0 ? hx+6 : hx-6-bw; by = ey-bh/2;
+    } else {
+      var vy=Y+R3+18;
+      ctx.moveTo(X,Y+11); ctx.lineTo(X,vy); ctx.stroke();
+      ctx.beginPath(); ctx.arc(X,vy,2,0,TAU); ctx.fill();
+      bx = Math.min(W-8-bw, Math.max(8, X-bw/2)); by = vy+6;
+    }
+    ctx.fillStyle=hexA(col.bg,.88); ctx.strokeStyle=hexA(col.acc,.45); ctx.beginPath();
+    if(ctx.roundRect) ctx.roundRect(bx,by,bw,bh,6); else ctx.rect(bx,by,bw,bh); ctx.fill(); ctx.stroke();
+    ctx.fillStyle=col.acc; ctx.fillRect(bx,by+8,2,bh-16);
+    ctx.textAlign="left"; ctx.font="600 12px "+col.mono; ctx.fillStyle=col.fg; ctx.fillText(t1,bx+11,by+17);
+    ctx.font="400 10px "+col.mono; ctx.fillStyle=col.muted; ctx.fillText(t2,bx+11,by+31);
+  }
+  /* cursor readout: live lat/lon + distance from home, tethered to the marker */
+  function drawCursor(X, Y){
+    if(mx<0) return;
+    var lon=HOME[0]+(mx-W/2)/(k*cosL), lat=HOME[1]-(my-H/2)/k;
+    var km=Math.hypot((lon-HOME[0])*cosL,lat-HOME[1])*111.32;
+    ctx.save(); ctx.setLineDash([3,4]); ctx.strokeStyle=hexA(col.acc,.35); ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(X,Y); ctx.lineTo(mx,my); ctx.stroke(); ctx.restore();
+    ctx.strokeStyle=hexA(col.fg,.7); ctx.lineWidth=1; ctx.beginPath(); ctx.arc(mx,my,6,0,6.2832); ctx.stroke();
+    var txt=Math.abs(lat).toFixed(3)+"°"+(lat>=0?"N":"S")+"  "+lon.toFixed(3)+"°E  ·  "+km.toFixed(1)+" km";
+    ctx.font="500 10px "+col.mono; var tw=ctx.measureText(txt).width+14, tx=mx+14, ty=my+12;
+    if(tx+tw>W-6) tx=mx-14-tw; if(ty+20>H-6) ty=my-32;
+    ctx.fillStyle=hexA(col.bg,.88); ctx.strokeStyle=hexA(col.acc,.35); ctx.beginPath();
+    if(ctx.roundRect) ctx.roundRect(tx,ty,tw,20,5); else ctx.rect(tx,ty,tw,20); ctx.fill(); ctx.stroke();
+    ctx.fillStyle=col.fg; ctx.textAlign="left"; ctx.fillText(txt,tx+7,ty+13.5);
   }
   function label(a,b,x,y,c,above,big,left){
     ctx.font = (big?"700 15px ":"600 12px ") + col.font;
@@ -594,8 +663,8 @@ clock(); setInterval(clock, 1000);
     c=c.trim(); if(c[0]==="#"){ var n=c.slice(1); if(n.length===3) n=n.replace(/./g,"$&$&"); var v=parseInt(n,16); return "rgba("+(v>>16&255)+","+(v>>8&255)+","+(v&255)+","+a+")"; }
     var m=c.match(/[\d.]+/g); return m ? "rgba("+m[0]+","+m[1]+","+m[2]+","+a+")" : c;
   }
-  cv.addEventListener("mousemove", function(e){ var r=cv.getBoundingClientRect(); mx=e.clientX-r.left; my=e.clientY-r.top; });
-  cv.addEventListener("mouseleave", function(){ mx=my=-999; });
+  cv.addEventListener("mousemove", function(e){ var r=cv.getBoundingClientRect(); mx=e.clientX-r.left; my=e.clientY-r.top; if(RM) draw(performance.now()); });
+  cv.addEventListener("mouseleave", function(){ mx=my=-999; if(RM) draw(performance.now()); });
   themeListeners.push(function(){ colors(); if(RM||!visible) draw(performance.now()); });
   addEventListener("resize", function(){ build(); draw(performance.now()); });
   colors(); build(); draw(performance.now());
