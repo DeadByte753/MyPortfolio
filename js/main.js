@@ -186,18 +186,106 @@ if(FINE && !RM){
   $$(".card:not(.tilt)").forEach(function(c){
     c.addEventListener("mousemove", function(e){ var r=c.getBoundingClientRect(); c.style.setProperty("--mx",(e.clientX-r.left)+"px"); c.style.setProperty("--my",(e.clientY-r.top)+"px"); });
   });
-  var cst = $("#coinStage"), ctilt = $("#coinBtn");
-  cst.addEventListener("mousemove", function(e){ var r=cst.getBoundingClientRect(); var px=(e.clientX-r.left)/r.width-.5, py=(e.clientY-r.top)/r.height-.5; ctilt.style.setProperty("--ry",(px*30)+"deg"); ctilt.style.setProperty("--rx",(-py*26)+"deg"); });
-  cst.addEventListener("mouseleave", function(){ ctilt.style.setProperty("--ry","0deg"); ctilt.style.setProperty("--rx","0deg"); });
+}
+
+/* ---------- hero radar parallax ----------
+   Eased --px/--py (-1..1) on the stage; CSS turns them into layered offsets + coin tilt.
+   Pointer events cover mouse and touch-drag; the rAF loop only runs while easing. */
+(function(){
+  if(RM) return;
+  var st=$("#coinStage"), hero=$(".hero"), tx=0, ty=0, x=0, y=0, raf=0;
+  function clamp(v){ return v<-1?-1:v>1?1:v; }
+  function step(){
+    x+=(tx-x)*.08; y+=(ty-y)*.08;
+    st.style.setProperty("--px",x.toFixed(4)); st.style.setProperty("--py",y.toFixed(4));
+    raf = (Math.abs(tx-x)>.001||Math.abs(ty-y)>.001) ? requestAnimationFrame(step) : 0;
+  }
+  function kick(){ if(!raf) raf=requestAnimationFrame(step); }
+  hero.addEventListener("pointermove", function(e){
+    var r=st.getBoundingClientRect();
+    tx=clamp((e.clientX-(r.left+r.width/2))/(innerWidth/2));
+    ty=clamp((e.clientY-(r.top+r.height/2))/(innerHeight/2));
+    kick();
+  },{passive:true});
+  function reset(){ tx=ty=0; kick(); }
+  hero.addEventListener("pointerleave", reset);
+  hero.addEventListener("pointercancel", reset);
+})();
+
+/* ---------- logo → radar accent ----------
+   Samples the logo on a 64×64 canvas, buckets saturated pixels into 24 hue bins
+   (weighted by saturation, nudged toward the rim where badge colors live), takes the
+   strongest hue neighbourhood, and normalises it into a readable accent. Neutral
+   (white/black/grey) pixels are ignored. Results are cached per image URL.
+   Fallbacks: an explicit data-accent="#hex" on the <img>, else FALLBACK (red), e.g. for
+   monochrome logos or cross-origin images without CORS, which taint the canvas. */
+var accentCache = {}, FALLBACK = {h:356, s:.84, l:.48};
+function rgbToHsl(r,g,b){
+  var mx=Math.max(r,g,b), mn=Math.min(r,g,b), l=(mx+mn)/2, d=mx-mn;
+  if(!d) return {h:0, s:0, l:l};
+  var h = mx===r ? ((g-b)/d+6)%6 : mx===g ? (b-r)/d+2 : (r-g)/d+4;
+  return {h:h*60, s:d/(1-Math.abs(2*l-1)), l:l};
+}
+function vivid(c){ return {h:c.h, s:Math.max(c.s,.62), l:Math.min(.58,Math.max(.46,c.l))}; }  // readable on black
+function dominantAccent(img){
+  var hex = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.exec((img.dataset.accent||"").trim());
+  if(hex){ var hx=hex[1].length===3 ? hex[1].replace(/./g,"$&$&") : hex[1], n=parseInt(hx,16);
+    return vivid(rgbToHsl((n>>16&255)/255,(n>>8&255)/255,(n&255)/255)); }
+  var key = img.currentSrc || img.src;
+  if(key in accentCache) return accentCache[key];
+  if(!img.complete || !img.naturalWidth) return undefined;      // not loaded yet: the load listener retries
+  var N=64, cv=document.createElement("canvas"); cv.width=cv.height=N;
+  var g=cv.getContext("2d",{willReadFrequently:true}), data;
+  try{ g.drawImage(img,0,0,N,N); data=g.getImageData(0,0,N,N).data; }
+  catch(e){ return (accentCache[key]=null); }                   // tainted canvas (cross-origin)
+  var W=new Float64Array(24), R=new Float64Array(24), G=new Float64Array(24), B=new Float64Array(24), total=0, k;
+  for(var i=0;i<data.length;i+=4){
+    if(data[i+3]<128) continue;
+    var c=rgbToHsl(data[i]/255,data[i+1]/255,data[i+2]/255);
+    if(c.s<.25||c.l<.12||c.l>.9) continue;
+    var p=i/4, x=p%N-N/2+.5, y=Math.floor(p/N)-N/2+.5, w=c.s*(.4+Math.sqrt(x*x+y*y)/(N/2));
+    k=Math.floor(c.h/15)%24;
+    W[k]+=w; R[k]+=data[i]*w; G[k]+=data[i+1]*w; B[k]+=data[i+2]*w; total+=w;
+  }
+  if(total<N*N*.03) return (accentCache[key]=null);           // essentially monochrome logo
+  var best=0, bs=-1;
+  for(k=0;k<24;k++){ var sc=W[k]+.5*(W[(k+23)%24]+W[(k+1)%24]); if(sc>bs){bs=sc;best=k;} }
+  var sw=0, sr=0, sg=0, sb=0;
+  [best+23,best,best+1].forEach(function(j){ j%=24; sw+=W[j]; sr+=R[j]; sg+=G[j]; sb+=B[j]; });
+  return (accentCache[key]=vivid(rgbToHsl(sr/sw/255,sg/sw/255,sb/sw/255)));
+}
+function setRadarAccent(stage, img){
+  var c = img ? dominantAccent(img) : null;
+  if(c === undefined) return;                                   // logo still loading; keep current accent
+  c = c || FALLBACK;
+  // take the short way round the colour wheel so red→green doesn't sweep through blue
+  var cur = stage._rh == null ? FALLBACK.h : stage._rh;
+  var h = cur + ((c.h - cur) % 360 + 540) % 360 - 180;
+  var first = stage._rh == null;
+  if(first) stage.style.transition = "none";                     // first paint: no fade from the default
+  stage._rh = h;
+  stage.style.setProperty("--rh", h.toFixed(1));
+  stage.style.setProperty("--rs", (c.s*100).toFixed(1)+"%");
+  stage.style.setProperty("--rl", (c.l*100).toFixed(1)+"%");
+  if(first){ void stage.offsetWidth; stage.style.transition = ""; }
 }
 
 /* ---------- guild coin flip ---------- */
 (function(){
   var stage=$("#coinStage"), coin=$("#coin"), cap=$("#coinCap"), flip=0, hovering=false;
   var info=[["ASU Dev Guild","Learn · Build · Serve"],["ASU Cyber Guild","Team CyberGuild · HackForGov 5 Top 5"]];
+  var faces=[$(".coin .front img"), $(".coin .back img")], side=0;
+  function sync(){ setRadarAccent(stage, faces[side]); }
+  faces.forEach(function(img, i){
+    // re-sync when a logo finishes loading or is swapped at runtime (src/srcset/data-accent)
+    img.addEventListener("load", function(){ if(i===side) sync(); });
+    new MutationObserver(function(){ if(i===side) sync(); }).observe(img,{attributes:true,attributeFilter:["src","srcset","data-accent"]});
+  });
+  sync();
   function doFlip(){
     flip+=180; coin.style.setProperty("--flip",flip+"deg");
-    var side=(flip/180)%2; stage.classList.toggle("cyber", side===1);
+    side=(flip/180)%2; stage.classList.toggle("cyber", side===1);
+    sync();
     cap.classList.add("swap");
     setTimeout(function(){ $("#coinName").textContent=info[side][0]; $("#coinSub").textContent=info[side][1]; cap.classList.remove("swap"); }, 450);
   }

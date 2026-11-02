@@ -77,9 +77,39 @@
         </div>
       </div>
       <div class="coin-stage" id="coinStage">
+        <div class="radar" aria-hidden="true">
+          <div class="r-layer r-back">
+            <div class="r-grid"></div>
+            <div class="r-cross"></div>
+            <div class="r-ticks"></div><div class="r-ticks major"></div>
+            <div class="r-ring r1"></div><div class="r-ring r2"></div><div class="r-ring r3"></div>
+            <div class="r-sweep"></div>
+            <div class="r-pulse"></div><div class="r-pulse p2"></div>
+          </div>
+          <div class="r-layer r-mid">
+            <div class="r-orbit o1"></div><div class="r-orbit o2"></div><div class="r-orbit o3"></div>
+            <svg class="r-net" viewBox="0 0 200 200">
+              <g class="r-links"><path d="M112 14 166 40 178 112 150 176 62 172"/><path d="M112 14 38 52 28 118"/><path class="faint" d="M28 118 62 172"/></g>
+              <g class="r-nodes">
+                <g data-a="7.9"><circle class="halo" style="animation-delay:-6.85s" cx="112" cy="14" r="2.2"/><circle cx="112" cy="14" r="2.2"/></g>
+                <g data-a="47.7"><circle class="halo" style="animation-delay:-6.07s" cx="166" cy="40" r="2.2"/><circle cx="166" cy="40" r="2.2"/></g>
+                <g data-a="98.7"><circle class="halo" style="animation-delay:-5.08s" cx="178" cy="112" r="2.2"/><circle class="hot" cx="178" cy="112" r="2.6"/></g>
+                <g data-a="146.7"><circle class="halo" style="animation-delay:-4.15s" cx="150" cy="176" r="2.2"/><circle cx="150" cy="176" r="2.2"/></g>
+                <g data-a="207.8"><circle class="halo" style="animation-delay:-2.96s" cx="62" cy="172" r="2.2"/><circle cx="62" cy="172" r="2.2"/></g>
+                <g data-a="256"><circle class="halo" style="animation-delay:-2.02s" cx="28" cy="118" r="2.2"/><circle class="hot" cx="28" cy="118" r="2.6"/></g>
+                <g data-a="307.7"><circle class="halo" style="animation-delay:-1.02s" cx="38" cy="52" r="2.2"/><circle cx="38" cy="52" r="2.2"/></g>
+              </g>
+            </svg>
+            <div class="r-dust"><i style="--x:18%;--y:30%;--t:9s"></i><i style="--x:82%;--y:24%;--t:12s;--dl:-3s"></i><i style="--x:12%;--y:70%;--t:10s;--dl:-6s"></i><i style="--x:88%;--y:66%;--t:13s;--dl:-2s"></i><i style="--x:50%;--y:6%;--t:11s;--dl:-8s"></i><i style="--x:34%;--y:92%;--t:14s;--dl:-5s"></i><i style="--x:70%;--y:88%;--t:9s;--dl:-1s"></i></div>
+          </div>
+          <div class="r-layer r-front">
+            <span class="r-hud tl"><b></b>SCAN · ACTIVE</span>
+            <span class="r-hud tr">11.64°N · 122.31°E</span>
+            <span class="r-hud br">NODES <em>07</em> / SECURE</span>
+          </div>
+        </div>
         <div class="coin-glow" aria-hidden="true"></div>
-        <div class="ring" aria-hidden="true"></div>
-        <div class="ring ring2" aria-hidden="true"></div>
+        <div class="coin-halo" aria-hidden="true"></div>
         <div class="coin-shadow" aria-hidden="true"></div>
         <button class="coin-tilt" id="coinBtn" aria-label="Flip between the ASU Dev Guild and ASU Cyber Guild logos">
           <span class="coin" id="coin">
@@ -89,9 +119,11 @@
           </span>
         </button>
         <div class="coin-cap" id="coinCap"><b id="coinName">ASU Dev Guild</b><span id="coinSub">Learn · Build · Serve</span></div>
-        <span class="chip-float a"><i></i>React</span>
-        <span class="chip-float b"><i></i>Flutter</span>
-        <span class="chip-float c"><i></i>Cybersecurity</span>
+        <div class="chips-layer">
+          <span class="chip-float a"><i></i>React</span>
+          <span class="chip-float b"><i></i>Flutter</span>
+          <span class="chip-float c"><i></i>Cybersecurity</span>
+        </div>
       </div>
     </div>
   </section>
