@@ -596,15 +596,23 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-bet
 }
 ::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
 
-/* Print / Save as PDF: only the resume */
+/* Print / Save as PDF */
 @media print{
-  @page{margin:14mm}
-  body *{visibility:hidden!important}
-  #resume,#resume *{visibility:visible!important}
-  #resume{position:absolute!important;inset:0 auto auto 0!important;width:100%!important;height:auto!important;overflow:visible!important;background:#fff!important;display:block!important;padding:0!important}
-  #resume .box{width:100%!important;max-height:none!important;overflow:visible!important;border:0!important;background:#fff!important;color:#000!important;padding:0!important;box-shadow:none!important}
-  #resume .close,#resume .cv-actions{display:none!important}
-  #resume .cv-head p,#resume .cv-head .ct,#resume .cv-sec li span{color:#444!important}
-  #resume .cv-sec h4{color:#000!important}
-  #resume .cv-sec{break-inside:avoid;border-color:#ccc!important}
+  @page{margin:12mm}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  /* full portfolio (downloadable PDF): show everything, drop chrome and effects */
+  [data-reveal],[data-reveal].pending{opacity:1!important;animation:none!important;translate:none!important;scale:none!important;filter:none!important}
+  #progress,#cursor,.to-top,.toast,.spark,.mobile-menu,.menu-btn,.theme-btn,canvas{display:none!important}
+  header,.nav,nav.links{position:static!important}
+  article,figure,.card{break-inside:avoid}
+
+  /* resume only (Download PDF button inside the resume popup) */
+  body.print-resume *{visibility:hidden!important}
+  body.print-resume #resume,body.print-resume #resume *{visibility:visible!important}
+  body.print-resume #resume{position:absolute!important;inset:0 auto auto 0!important;width:100%!important;height:auto!important;overflow:visible!important;background:#fff!important;display:block!important;padding:0!important;opacity:1!important;pointer-events:auto!important}
+  body.print-resume #resume .box{width:100%!important;max-height:none!important;overflow:visible!important;border:0!important;background:#fff!important;color:#000!important;padding:0!important;box-shadow:none!important}
+  body.print-resume #resume .close,body.print-resume #resume .cv-actions{display:none!important}
+  body.print-resume #resume .cv-head p,body.print-resume #resume .cv-head .ct,body.print-resume #resume .cv-sec li span{color:#444!important}
+  body.print-resume #resume .cv-sec h4{color:#000!important}
+  body.print-resume #resume .cv-sec{break-inside:avoid;border-color:#ccc!important}
 }
