@@ -411,6 +411,12 @@ document.addEventListener("click", function(e){
 });
 var resume = $("#resume");
 $("#resumeBtn").addEventListener("click", function(){ openModal(resume); });
+$("#pdfCv").addEventListener("click", function(){
+  var old = document.title;
+  document.title = "John Emmanuel Suante - Resume";
+  window.print();
+  document.title = old;
+});
 $("#copyCv").addEventListener("click", function(){ copy(resume.querySelector(".box").innerText.replace(/Copy resume text[\s\S]*$/,"").trim(), "Resume text copied", null); });
 
 /* ---------- tabs ---------- */
