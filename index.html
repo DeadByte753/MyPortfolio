@@ -166,11 +166,33 @@
           </div>
         </div>
         <div class="map-card" data-reveal>
-          <canvas id="map" role="img" aria-label="Dot-matrix map of Panay Island with Poblacion, Malinao, Aklan marked at the center"></canvas>
-          <div class="map-hud"><span class="hud-tag">Local time <b id="clock">--:--:--</b></span></div>
-          <div class="map-label">
-            <div class="place"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Poblacion, Malinao, Aklan</div>
-            <div class="coords">11.6442° N, 122.3076° E · UTC+8</div>
+          <canvas id="map" tabindex="0" role="img" aria-label="Interactive map of Panay, Philippines, centered on Poblacion, Malinao, Aklan" aria-describedby="mapHelp"></canvas>
+          <p class="sr-only" id="mapHelp">Drag to pan. Pinch, or hold Ctrl and scroll, to zoom. With the map focused: arrow keys pan, plus and minus zoom, 1 to 3 jump to home, campus and Iloilo City, and 0 shows the whole Philippines.</p>
+          <div class="map-info">
+            <div aria-live="polite">
+              <div class="mi-top"><span class="mi-tag" id="miTag">Home base</span><span id="miDist"></span></div>
+              <div class="place"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span id="miName">Poblacion, Malinao, Aklan</span></div>
+              <div class="coords" id="miCoords">11.6442° N, 122.3076° E · UTC+8</div>
+              <p class="mi-desc" id="miDesc">My hometown in northern Panay, about 10 km from campus.</p>
+            </div>
+            <div class="mi-places" role="group" aria-label="Jump to a place">
+              <button type="button" data-place="home" aria-pressed="true">Home</button>
+              <button type="button" data-place="campus" aria-pressed="false">Campus</button>
+              <button type="button" data-place="iloilo" aria-pressed="false">Iloilo City</button>
+            </div>
+          </div>
+          <div class="map-ctrl" role="group" aria-label="Map controls">
+            <button type="button" data-act="in" aria-label="Zoom in" title="Zoom in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+            <button type="button" data-act="out" aria-label="Zoom out" title="Zoom out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/></svg></button>
+            <button type="button" data-act="home" aria-label="Back to Malinao" title="Back to Malinao"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/></svg></button>
+            <button type="button" data-act="all" aria-label="Show the whole Philippines" title="Whole Philippines"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4H4v5M15 4h5v5M20 15v5h-5M4 15v5h5"/></svg></button>
+          </div>
+          <div class="map-hint" id="mapHint" aria-hidden="true"></div>
+          <div class="map-hud">
+            <span class="hud-tag"><span class="hud-l">Local time </span><b id="clock">--:--:--</b></span>
+            <span class="hud-tag" id="mapSky" hidden></span>
+            <span class="hud-tag" id="mapWx" hidden></span>
+            <span class="hud-tag hud-scale" id="mapScale" aria-hidden="true"><i></i><span>10 km</span></span>
           </div>
         </div>
       </div>
@@ -518,5 +540,6 @@
   </div>
 
   <script src="js/main.js"></script>
+  <script src="js/map.js"></script>
 </body>
 </html>
