@@ -355,6 +355,13 @@ section.block{padding-block:110px 40px}
 .chip:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--accent) 55%,transparent)}
 .chip small{font:400 .68rem var(--f-mono);color:var(--faint)}
 .chip i{width:6px;height:6px;border-radius:50%;background:var(--c,var(--accent));opacity:.85}
+/* tech logos (inline sprite) */
+.ti-sprite{position:absolute;width:0;height:0;overflow:hidden}
+.ti{width:16px;height:16px;flex:none;display:block;color:var(--fg)}
+.ti.ti-sec{color:var(--accent)}
+.chip .ti{width:16px;height:16px;margin-left:-2px}
+.n-in .ti{width:52%;height:52%;transition:transform .35s cubic-bezier(.2,.9,.2,1.4)}
+.n-in .ti.ti-sec{width:46%;height:46%}
 @media (max-width:980px){.skill,.skill.wide{grid-column:span 3}}
 @media (max-width:640px){.skills-grid{grid-template-columns:minmax(0,1fr)}.skill,.skill.wide{grid-column:auto}}
 
